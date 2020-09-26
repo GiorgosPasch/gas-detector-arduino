@@ -1,0 +1,49 @@
+// Leds
+int greenLed = 13;
+int yellowLed = 12;
+int redLed = 11;
+
+// speaker and sensor
+int buzzer = 10;
+int gasSensor = A0;
+
+// thresholds for the leds
+// and for speaker which uses the high one
+int midThreshold = 300;
+int highThreshold = 420;
+
+void setup()
+{
+  pinMode(greenLed, OUTPUT);
+  pinMode(yellowLed, OUTPUT);
+  pinMode(redLed, OUTPUT);
+  pinMode(A0, INPUT);
+  Serial.begin(9600);
+}
+// lights up the first led and switches off the rest ones.
+void lightUpLed(int a, int b, int c){
+	digitalWrite(a, HIGH);
+	digitalWrite(b, LOW);
+	digitalWrite(c, LOW);
+}
+void loop()
+{
+  
+  int sensorValue = analogRead(A0);
+  Serial.print("Gas Sensor(): ");
+  Serial.println(sensorValue);
+  if(sensorValue < midThreshold){
+  	lightUpLed(greenLed, yellowLed, redLed);
+    noTone(buzzer);
+  }else if(sensorValue < highThreshold){
+  	lightUpLed(yellowLed, greenLed, redLed);
+    noTone(buzzer);
+  }else{
+  	lightUpLed(redLed, greenLed, yellowLed);
+    tone(buzzer, 300);
+  }
+  
+  delay(1000);
+
+}
+
